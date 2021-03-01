@@ -3,6 +3,8 @@ from settings import Settings
 import pygame
 from ship import Ship
 from laser import Laser
+from alien import Alien
+
 
 class AlienInvasion:
     def __init__(self):
@@ -14,7 +16,25 @@ class AlienInvasion:
         pygame.display.set_caption("My game")
         self.ship = Ship(self)
         self.lasers = pygame.sprite.Group()
-    
+        self.aliens = pygame.sprite.Group()
+        self._create_fleet()        
+            
+    def _create_fleet(self):
+        alien = Alien(self)
+        alien_width, alien_height = alien.rect.size
+        available_space_x = self.settings .screen_width - (2 * alien_width)
+        number_of_aliens_x =  available_space_x // (2 * alien_width)
+        ship_height = self.ship.rect.height
+        available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
+        number_rows = available_space_y // (2 * alien_height)
+        for rows in range(number_rows) :       
+            for alien_number in range(number_of_aliens_x):
+                alien = Alien(self)
+                alien.x = alien_width + 2 * alien_width * alien_number
+                alien.rect.x = alien.x 
+                alien.rect.y = alien.rect.height + 2 *alien.rect.height + rows
+                self.aliens.add(alien)
+
     def fire_laser(self):
         new_laser = Laser(self)
         self.lasers.add(new_laser)  
@@ -50,7 +70,7 @@ class AlienInvasion:
         self.ship.blitme()
         for laser in self.lasers.sprites():
             laser.draw_laser()
-            
+        self.aliens.draw(self.screen)
         pygame.display.flip()
 
     def run_game(self):
@@ -63,7 +83,6 @@ class AlienInvasion:
             for laser in self.lasers.copy():
                 if laser.rect.bottom <=0:
                     self.lasers.remove(laser)
-            print(len(self.lasers))
             self._update_screen()
 
 
