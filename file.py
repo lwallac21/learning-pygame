@@ -22,11 +22,6 @@ class LinkedList:
             print(current.data)
             current = current.next
 
-
-LL = LinkedList()
-LL.insert(1)
-LL.insert(2)
-LL.insert(3)
-LL.insert(4)
-
-LL.printLL()
+def addition(a, b):
+    a + b 
+    
